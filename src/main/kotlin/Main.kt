@@ -5,7 +5,7 @@ fun main() {
     //numbers = mutableListOf(0.1,0.7,0.7,0.8,0.8,0.9)
     // Exercicio 2 do sor
     //val queue = Queue(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, timeServiceA = 3.0, timeServiceB = 5.0, servers = 2)
-    val queue = QueueImp(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, serviceTimeA = 3.0, serviceTimeB = 5.0, servers = 2)
+    val queue = QueueImp(capacity = 5, arrivalTimeA = 2f, arrivalTimeB = 5f, serviceTimeA = 3f, serviceTimeB = 5f, servers = 2)
 
     // exemplo E1 Henrique
     //val queue = Queue(capacity = 4, arrivalTimeA = 2.0, arrivalTimeB = 3.0, timeServiceA = 1.0, timeServiceB = 2.0)
@@ -15,11 +15,11 @@ fun main() {
     //val queue = Queue(capacity = 3, arrivalTimeA = 1.0, arrivalTimeB = 2.0, timeServiceA = 3.0, timeServiceB = 6.0)
 
     val scaler = scheduler(queue = queue, randomNums = numbers)
-    scaler.init(42.0)
+    scaler.init(42f)
 }
 
 interface Event {
-    fun getSingleEventTime() : Double
-    fun getCurrentEventTime() : Double
+    fun getSingleEventTime() : Float
+    fun getCurrentEventTime() : Float
     fun isArrival() : Boolean
 }

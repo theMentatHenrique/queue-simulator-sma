@@ -2,7 +2,7 @@ package br.com.pucrs
 import java.io.FileWriter
 
 object RandomNumbersManager {
-    fun generateAndSave(fileName : String) : List<Double> {
+    fun generateAndSave(fileName : String) : List<Float> {
         val numbers = generateRandomNumbers(
             size = 100000,
             seed = 42,
@@ -21,17 +21,17 @@ object RandomNumbersManager {
         a: Long,
         c: Long,
         m: Long
-    ): List<Double> {
-        val numbers = mutableListOf(seed.toDouble())
+    ): List<Float> {
+        val numbers = mutableListOf(seed.toFloat())
         var actual = seed.toDouble()
         for (i in 1 until size) {
             actual = (a * actual + c) % m
-            numbers.add(actual / m)
+            numbers.add((actual / m).toFloat())
         }
         return numbers
     }
 
-    private fun saveCSV(list : List<Double>, fileName : String) {
+    private fun saveCSV(list: List<Float>, fileName: String) {
         val fileWriter = FileWriter(fileName)
         fileWriter.use { writer ->
             list.forEach { linha ->

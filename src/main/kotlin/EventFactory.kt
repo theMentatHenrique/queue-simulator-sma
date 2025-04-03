@@ -1,12 +1,12 @@
 package br.com.pucrs
 
 object EventFactory {
-    fun createEvent(singleTime : Double, currentTime : Double, isArrival : Boolean) : Event {
+    fun createEvent(singleTime : Float, currentTime : Float, isArrival : Boolean) : Event {
         return object : Event {
-            override fun getSingleEventTime(): Double {
+            override fun getSingleEventTime(): Float {
                 return singleTime
             }
-            override fun getCurrentEventTime(): Double {
+            override fun getCurrentEventTime(): Float {
                 return currentTime
             }
             override fun isArrival(): Boolean {

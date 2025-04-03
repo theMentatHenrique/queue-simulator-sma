@@ -1,9 +1,9 @@
 package br.com.pucrs.domain
 
 interface Queue {
-    fun insert (times : Double, schedulerExit : () -> Unit)
-    fun out (times : Double, schedulerExit : () -> Unit)
+    fun insert (times : Float, schedulerExit : () -> Unit)
+    fun out (times : Float, schedulerExit : () -> Unit)
     fun print()
-    fun getArrivalTimes() : Pair<Double, Double>
-    fun getServiceTimes() : Pair<Double, Double>
+    fun getArrivalTimes() : Pair<Float, Float>
+    fun getServiceTimes() : Pair<Float, Float>
 }

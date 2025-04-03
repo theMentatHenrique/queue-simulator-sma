@@ -6,10 +6,10 @@ import br.com.pucrs.domain.Queue
 class scheduler(
     private val queue : Queue,
     private var events : MutableList<Event> = mutableListOf(),
-    private var randomNums : MutableList<Double> = mutableListOf(),
-    private var totalTime : Double = 0.0
+    private var randomNums : MutableList<Float> = mutableListOf(),
+    private var totalTime : Float = 0f
 ) {
-    fun init(seed : Double) {
+    fun init(seed : Float) {
         events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, true ))
         stagger()
         queue.print()
@@ -47,7 +47,7 @@ class scheduler(
 
      private fun schedulerExit() {
          if (randomNums.isEmpty()) return
-         val time = calculateTimeByRandom(queue.getServiceTimes())
+         val time = calculateTimeByRandom(queue.getServiceTimes()).toFloat()
          events.add(EventFactory.createEvent(isArrival = false, singleTime = time, currentTime = totalTime + time ))
      }
 
@@ -57,7 +57,7 @@ class scheduler(
          events.add(EventFactory.createEvent(isArrival = true, singleTime = time, currentTime = totalTime + time ))
      }
 
-     private fun calculateTimeByRandom(pair : Pair<Double, Double>): Double {
+     private fun calculateTimeByRandom(pair : Pair<Float, Float>): Float {
          val init = pair.first
          val end = pair.second
          val random = randomNums.removeAt(0)
