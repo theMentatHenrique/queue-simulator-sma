@@ -1,17 +1,44 @@
 package br.com.pucrs
 
-class Queue(
-    var status: Int = 0,
+import br.com.pucrs.domain.Queue
+
+class QueueImp(
     val servers: Int = 1,
     val capacity: Int = 0, // k
     val arrivalTimeA: Double = 0.0,
     val arrivalTimeB: Double = 0.0,
-    val timeServiceA: Double = 0.0,
-    val timeServiceB: Double = 0.0,
-    var lost: Int = 0,
-    val times: MutableList<Double> = MutableList(capacity + 1) { 0.0 })
+    val serviceTimeA: Double = 0.0,
+    val serviceTimeB: Double = 0.0,
+    private var status: Int = 0,
+    private var lost: Int = 0,
+    val times: MutableList<Double> = MutableList(capacity + 1) { 0.0 }
+) : Queue
 {
-    fun printQueue() {
+    override fun insert(time : Double, scheduler : () -> Unit) {
+        if (status < capacity) {
+            times[status] += time
+            status++
+            if (status <= servers) {
+                scheduler()
+            }
+        } else {
+            // TODO: Deu algumas divergencias quando validados com os exemplos, analisar com calma
+            lost++
+        }
+    }
+
+    override fun out (times: Double, schedulerExit: () -> Unit) {
+        if (status == this.times.size) {
+            status--
+        }
+        this.times[status] += times
+        status--
+        if (status >= servers) {
+            schedulerExit()
+        }
+    }
+
+    override fun print() {
         var iterator = 0
         var total = 0.0;
         var percent = 0.0
@@ -29,27 +56,11 @@ class Queue(
         println("Perdido:${lost}")
     }
 
-    fun insert(time : Double, scheduler : () -> Unit) {
-        if (status < capacity) {
-            times[status] += time
-            status++
-            if (status <= servers) {
-                scheduler()
-            }
-        } else {
-            // TODO: Deu algumas divergencias quando validados com os exemplos, analisar com calma
-            lost++
-        }
+    override fun getArrivalTimes() : Pair<Double, Double> {
+        return Pair(arrivalTimeA, arrivalTimeB)
     }
 
-    fun out (time: Double, auxTime: Double, scheduler: () -> Unit) {
-        if (status == times.size) {
-            status--
-        }
-        times[status] += time - auxTime
-        status--
-        if (status >= servers) {
-            scheduler()
-        }
+    override fun getServiceTimes() : Pair<Double, Double> {
+        return Pair(serviceTimeA, serviceTimeB)
     }
 }

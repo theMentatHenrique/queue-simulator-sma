@@ -1,5 +1,7 @@
 package br.com.pucrs
 
+import br.com.pucrs.domain.Queue
+
 
 class scheduler(
     private val queue : Queue,
@@ -10,7 +12,7 @@ class scheduler(
     fun init(seed : Double) {
         events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, true ))
         stagger()
-        queue.printQueue()
+        queue.print()
     }
 
      private fun stagger() {
@@ -40,22 +42,24 @@ class scheduler(
     private fun exit(event : Event) {
         val auxTime = totalTime
         accumulateTime(event)
-        queue.out(event.getCurrentEventTime() , auxTime) { schedulerExit() }
+        queue.out(event.getCurrentEventTime() - auxTime) { schedulerExit() }
     }
 
      private fun schedulerExit() {
          if (randomNums.isEmpty()) return
-         val time = calculateTimeByRandom(queue.timeServiceA, queue.timeServiceB)
+         val time = calculateTimeByRandom(queue.getServiceTimes())
          events.add(EventFactory.createEvent(isArrival = false, singleTime = time, currentTime = totalTime + time ))
      }
 
      private fun schedulerArrival() {
          if (randomNums.isEmpty()) return
-         val time = calculateTimeByRandom(queue.arrivalTimeA, queue.arrivalTimeB)
+         val time = calculateTimeByRandom(queue.getArrivalTimes())
          events.add(EventFactory.createEvent(isArrival = true, singleTime = time, currentTime = totalTime + time ))
      }
 
-     private fun calculateTimeByRandom(init : Double, end: Double): Double {
+     private fun calculateTimeByRandom(pair : Pair<Double, Double>): Double {
+         val init = pair.first
+         val end = pair.second
          val random = randomNums.removeAt(0)
          return (end - init ) * random + init
      }

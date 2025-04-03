@@ -5,7 +5,7 @@ fun main() {
     //numbers = mutableListOf(0.1,0.7,0.7,0.8,0.8,0.9)
     // Exercicio 2 do sor
     //val queue = Queue(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, timeServiceA = 3.0, timeServiceB = 5.0, servers = 2)
-    val queue = Queue(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, timeServiceA = 3.0, timeServiceB = 5.0, servers = 2)
+    val queue = QueueImp(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, serviceTimeA = 3.0, serviceTimeB = 5.0, servers = 2)
 
     // exemplo E1 Henrique
     //val queue = Queue(capacity = 4, arrivalTimeA = 2.0, arrivalTimeB = 3.0, timeServiceA = 1.0, timeServiceB = 2.0)
