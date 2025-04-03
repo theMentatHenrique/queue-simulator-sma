@@ -1,10 +1,6 @@
 package br.com.pucrs
 
 import br.com.pucrs.domain.Queue
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 class QueueImp(
     val servers: Int = 1,

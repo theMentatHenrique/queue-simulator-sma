@@ -1,4 +1,6 @@
-package br.com.pucrs
+package br.com.pucrs.factory
+
+import br.com.pucrs.Event
 
 object EventFactory {
     fun createEvent(singleTime : Float, currentTime : Float, isArrival : Boolean) : Event {

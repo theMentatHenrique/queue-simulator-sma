@@ -1,5 +1,7 @@
 package br.com.pucrs
 
+import br.com.pucrs.factory.RandomNumbersManager
+
 fun main() {
     var numbers = RandomNumbersManager.generateAndSave("random_numbers.txt").toMutableList()
     //numbers = mutableListOf(0.1,0.7,0.7,0.8,0.8,0.9)

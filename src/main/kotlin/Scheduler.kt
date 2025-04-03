@@ -1,6 +1,7 @@
 package br.com.pucrs
 
 import br.com.pucrs.domain.Queue
+import br.com.pucrs.factory.EventFactory
 
 
 class scheduler(

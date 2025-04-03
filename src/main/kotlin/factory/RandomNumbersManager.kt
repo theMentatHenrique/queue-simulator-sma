@@ -1,4 +1,4 @@
-package br.com.pucrs
+package br.com.pucrs.factory
 import java.io.FileWriter
 
 object RandomNumbersManager {
