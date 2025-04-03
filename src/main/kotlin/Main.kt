@@ -1,9 +1,5 @@
 package br.com.pucrs
 
-import Factory.domain.Queue
-import Factory.domain.scheduler
-import br.com.pucrs.domain.RandomNumbersManager
-
 fun main() {
     var numbers = RandomNumbersManager.generateAndSave("random_numbers.txt").toMutableList()
     //numbers = mutableListOf(0.1,0.7,0.7,0.8,0.8,0.9)

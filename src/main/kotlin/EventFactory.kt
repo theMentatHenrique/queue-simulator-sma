@@ -1,6 +1,4 @@
-package br.com.pucrs.domain
-
-import br.com.pucrs.Event
+package br.com.pucrs
 
 object EventFactory {
     fun createEvent(singleTime : Double, currentTime : Double, isArrival : Boolean) : Event {

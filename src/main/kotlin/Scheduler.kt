@@ -1,7 +1,4 @@
-package Factory.domain
-
-import br.com.pucrs.Event
-import br.com.pucrs.domain.EventFactory
+package br.com.pucrs
 
 
 class scheduler(
@@ -31,16 +28,8 @@ class scheduler(
     private fun arrival(event: Event) {
         val auxTime = totalTime
         accumulateTime(event)
-         if (queue.status < queue.capacity) {
-             queue.times[queue.status] += event.getCurrentEventTime() - auxTime
-             queue.status++
-             if (queue.status <= queue.servers) {
-                schedulerExit()
-             }
-         } else {
-             // TODO: Deu algumas divergencias quando validados com os exemplos, analisar com calma
-             queue.lost++
-         }
+        val time = event.getCurrentEventTime() - auxTime
+        queue.insert(time) {schedulerExit()}
          schedulerArrival()
      }
 
@@ -49,20 +38,9 @@ class scheduler(
     }
 
     private fun exit(event : Event) {
-        try {
-            val auxTime = totalTime
-            accumulateTime(event)
-            if (queue.status == queue.times.size) {
-                queue.status--
-            }
-            queue.times[queue.status] += event.getCurrentEventTime() - auxTime
-            queue.status--
-            if (queue.status >= queue.servers) {
-                schedulerExit()
-            }
-        } catch (e: Exception) {
-            print("helolo")
-        }
+        val auxTime = totalTime
+        accumulateTime(event)
+        queue.out(event.getCurrentEventTime() , auxTime) { schedulerExit() }
     }
 
      private fun schedulerExit() {
