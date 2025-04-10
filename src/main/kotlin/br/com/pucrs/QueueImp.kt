@@ -10,12 +10,12 @@ class QueueImp(
 ) : Queue {
     var status = 0
     private var lost = 0
-    private val times = MutableList(capacity + 1) { 0f }
+    private val times = MutableList(capacity) { 0f } 
 
     override fun insert(time: Float, scheduler: () -> Unit) {
         println("Inserindo na fila - Tempo: $time, Status atual: $status")
         if (status < capacity) {
-            times[status] += time
+            times[status] = time
             println("Fila atualizada - Novo tempo na fila: ${times[status]}")
             status++
             if (status <= servers) {
@@ -23,14 +23,15 @@ class QueueImp(
             }
         } else {
             lost++
+            println("Cliente perdido! Fila cheia.")
         }
     }
 
     override fun out(time: Float, schedulerExit: () -> Unit) {
         println("Saindo da fila - Tempo: $time, Status atual: $status")
         if (status > 0) {
-            times[status] += time
-            println("Fila atualizada após saída - Novo tempo na fila: ${times[status]}")
+            times[status - 1] = time
+            println("Fila atualizada após saída - Novo tempo na fila: ${times[status - 1]}")
             status--
             if (status >= servers) {
                 schedulerExit()
@@ -41,7 +42,11 @@ class QueueImp(
     override fun print() {
         var total = 0f
         times.forEach { total += it }
+        println("Total de tempo acumulado nas filas: $total")
 
+        if (total == 0f) {
+            println("Nenhum tempo acumulado, todas as probabilidades serão 0%.")
+        }
 
         println("Fila Estado | Tempo | Probabilidade")
         times.forEachIndexed { index, time ->
