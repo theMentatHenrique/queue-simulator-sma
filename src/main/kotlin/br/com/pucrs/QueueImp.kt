@@ -8,7 +8,7 @@ class QueueImp(
     val arrivalTimeRange: Pair<Float, Float>,
     val serviceTimeRange: Pair<Float, Float>
 ) : Queue {
-    var status = 0  // Este campo controla quantos clientes estão na fila.
+    var status = 0
     private var lost = 0
     private val times = MutableList(capacity + 1) { 0f }
 
@@ -23,7 +23,6 @@ class QueueImp(
             }
         } else {
             lost++
-            println("Cliente perdido! Fila cheia.")
         }
     }
 
@@ -43,13 +42,6 @@ class QueueImp(
         var total = 0f
         times.forEach { total += it }
 
-        // Verificando o total de tempos acumulados antes de calcular a probabilidade
-        println("Total de tempo acumulado nas filas: $total")
-
-        // Se o total for zero, não faz sentido calcular as probabilidades
-        if (total == 0f) {
-            println("Nenhum tempo acumulado, todas as probabilidades serão 0%.")
-        }
 
         println("Fila Estado | Tempo | Probabilidade")
         times.forEachIndexed { index, time ->

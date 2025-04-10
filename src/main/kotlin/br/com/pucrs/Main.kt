@@ -3,10 +3,8 @@ package br.com.pucrs
 import br.com.pucrs.factory.RandomNumbersManager
 
 fun main() {
-    // Gerar números aleatórios e convertê-los para MutableList
     val randomNums = RandomNumbersManager.generateRandomNumbers(100000, 42, 3432432, 98753, 354325325342534).toMutableList()
 
-    // Definir Fila 1 e Fila 2
     val queue1 = QueueImp(
         capacity = 3,
         servers = 2,
@@ -21,9 +19,7 @@ fun main() {
         serviceTimeRange = Pair(2f, 3f)
     )
 
-    // Criar a rede de filas
     val network = QueueNetwork(queue1, queue2, randomNums = randomNums)
 
-    // Rodar a simulação
     network.runSimulation()
 }
