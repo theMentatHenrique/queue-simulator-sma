@@ -1,9 +1,9 @@
 package br.com.pucrs.factory
 
-import br.com.pucrs.Event
+import br.com.pucrs.factory.Event
 
 object EventFactory {
-    fun createEvent(singleTime : Float, currentTime : Float, isArrival : Boolean) : Event {
+    fun createEvent(singleTime: Float, currentTime: Float, isArrival: Boolean): Event {
         return object : Event {
             override fun getSingleEventTime(): Float {
                 return singleTime

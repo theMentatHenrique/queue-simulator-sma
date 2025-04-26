@@ -1,5 +1,6 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'  // Garantir que a versão do Kotlin esteja correta
+    id 'application'  // Plugin necessário para rodar o aplicativo
 }
 
 group = 'br.com.pucrs'
@@ -10,12 +11,19 @@ repositories {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"  // Adicionando a dependência do Kotlin
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+application {
+    // Definindo a classe principal corretamente aqui
+    mainClass = 'br.com.pucrs.Main'  // Define a classe que contém o método main
 }
 
 test {
     useJUnitPlatform()
 }
+
 kotlin {
     jvmToolchain(17)
 }
