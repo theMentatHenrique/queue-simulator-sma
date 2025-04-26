@@ -3,17 +3,17 @@ package br.com.pucrs
 import br.com.pucrs.domain.Queue
 import br.com.pucrs.factory.EventFactory
 
-
-class scheduler(
-    private val queue : Queue,
+class Scheduler(
+    var randomNums : MutableList<Float> = mutableListOf(),
+    private val queueArrival : Queue,
+    private val queueExit : Queue,
     private var events : MutableList<Event> = mutableListOf(),
-    private var randomNums : MutableList<Float> = mutableListOf(),
     private var totalTime : Float = 0f
 ) {
     fun init(seed : Float) {
-        events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, true ))
+        events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, "arrival" ))
         stagger()
-        queue.print()
+        queueArrival.print()
     }
 
      private fun stagger() {
@@ -21,6 +21,8 @@ class scheduler(
              val event = getNextEvent()
              if (event.isArrival()) {
                  arrival(event)
+             } else if (event.isPassage()) {
+                 passage(event)
              } else {
                  exit(event)
              }
@@ -32,8 +34,8 @@ class scheduler(
         val auxTime = totalTime
         accumulateTime(event)
         val time = event.getCurrentEventTime() - auxTime
-        queue.insert(time) {schedulerExit()}
-         schedulerArrival()
+        queueArrival.insert(time) {schedulerPassage()}
+        schedulerArrival()
      }
 
     private fun accumulateTime(event: Event) {
@@ -43,27 +45,37 @@ class scheduler(
     private fun exit(event : Event) {
         val auxTime = totalTime
         accumulateTime(event)
-        queue.out(event.getCurrentEventTime() - auxTime) { schedulerExit() }
+        queueExit.out(event.getCurrentEventTime() - auxTime) { schedulerExit() }
+    }
+
+    private fun passage(event : Event) {
+        val auxTime = totalTime
+        accumulateTime(event)
+        // Os eventos manipulados abaixo devem ser diferentes, devo corrigir
+        queueArrival.out(event.getCurrentEventTime() - auxTime) {schedulerPassage()}
+
+        queueExit.insert(event.getCurrentEventTime() - auxTime) {schedulerExit()}
     }
 
      private fun schedulerExit() {
          if (randomNums.isEmpty()) return
-         val time = calculateTimeByRandom(queue.getServiceTimes()).toFloat()
-         events.add(EventFactory.createEvent(isArrival = false, singleTime = time, currentTime = totalTime + time ))
+         val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), false)
+         queueArrival.calcuateOperationTime(randomNums.removeAt(0), false)
+         events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
      }
 
      private fun schedulerArrival() {
          if (randomNums.isEmpty()) return
-         val time = calculateTimeByRandom(queue.getArrivalTimes())
-         events.add(EventFactory.createEvent(isArrival = true, singleTime = time, currentTime = totalTime + time ))
+         val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), true)
+
+         events.add(EventFactory.createEvent(type = "arrival", singleTime = time, currentTime = totalTime + time ))
      }
 
-     private fun calculateTimeByRandom(pair : Pair<Float, Float>): Float {
-         val init = pair.first
-         val end = pair.second
-         val random = randomNums.removeAt(0)
-         return (end - init ) * random + init
-     }
+    private fun schedulerPassage() {
+        if (randomNums.isEmpty()) return
+        val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), true)
+        events.add(EventFactory.createEvent(type = "passage", singleTime = time, currentTime = totalTime + time ))
+    }
 
      private fun getNextEvent(): Event {
          return events.minByOrNull {it.getCurrentEventTime()}!!

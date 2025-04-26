@@ -5,21 +5,19 @@ import br.com.pucrs.domain.Queue
 class QueueImp(
     val servers: Int = 1,
     val capacity: Int = 0, // k
-    val arrivalTimeA: Float = 0f,
-    val arrivalTimeB: Float = 0f,
-    val serviceTimeA: Float = 0f,
-    val serviceTimeB: Float = 0f,
-    private var status: Int = 0,
+    val arrivalTimes: Pair<Float, Float> = 0f to 0f,
+    val serviceTimes: Pair<Float, Float> = 0f to 0f,
+    private var costumers: Int = 0,
     private var lost: Int = 0,
-    val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
+    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
 ) : Queue
 {
-    override fun insert(time : Float, scheduler : () -> Unit) {
-        if (status < capacity) {
-            times[status] += time
-            status++
-            if (status <= servers) {
-                scheduler()
+    override fun insert(times : Float, schedulerPassage : () -> Unit) {
+        if (costumers < capacity) {
+            this.times[costumers] += times
+            costumers++
+            if (costumers <= servers) {
+                schedulerPassage()
             }
         } else {
             // TODO: Deu algumas divergencias quando validados com os exemplos, analisar com calma
@@ -27,14 +25,14 @@ class QueueImp(
         }
     }
 
-    override fun out (times: Float, schedulerExit: () -> Unit) {
-        if (status == this.times.size) {
-            status--
+    override fun out (times: Float, scheduler: () -> Unit) {
+        if (costumers == this.times.size) {
+            costumers--
         }
-        this.times[status] += times
-        status--
-        if (status >= servers) {
-            schedulerExit()
+        this.times[costumers] += times
+        costumers--
+        if (costumers >= servers) {
+            scheduler()
         }
     }
 
@@ -56,13 +54,21 @@ class QueueImp(
         println("Perdido:${lost}")
     }
 
-    override fun getArrivalTimes() : Pair<Float, Float> {
-        return Pair(arrivalTimeA, arrivalTimeB)
+    override fun getArrivalTimesAAA() : Pair<Float, Float> {
+        return arrivalTimes
     }
 
-    override fun getServiceTimes() : Pair<Float, Float> {
-        return Pair(serviceTimeA, serviceTimeB)
+    override fun getServiceTimesBBBBB(): Pair<Float, Float> {
+        return serviceTimes
     }
+
+    override fun calcuateOperationTime(time: Float, useArrival : Boolean): Float {
+        val pair = if (useArrival) {arrivalTimes} else {serviceTimes}
+        val init = pair.first
+        val end = pair.second
+        return (end - init ) * time + init
+    }
+
 
     // TODO: Fazer funcionar para formatação como a do sor
    /* private fun Float.round() : Float {

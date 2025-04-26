@@ -4,19 +4,11 @@ import br.com.pucrs.factory.RandomNumbersManager
 
 fun main() {
     var numbers = RandomNumbersManager.generateAndSave("random_numbers.txt").toMutableList()
-    //numbers = mutableListOf(0.1,0.7,0.7,0.8,0.8,0.9)
-    // Exercicio 2 do sor
-    //val queue = Queue(capacity = 5, arrivalTimeA = 2.0, arrivalTimeB = 5.0, timeServiceA = 3.0, timeServiceB = 5.0, servers = 2)
-    val queue = QueueImp(capacity = 5, arrivalTimeA = 2f, arrivalTimeB = 5f, serviceTimeA = 3f, serviceTimeB = 5f, servers = 2)
+    val queueArrival = QueueImp(capacity = 3, arrivalTimes = Pair(1f, 4f), serviceTimes = Pair(3f, 4f), servers = 2)
 
-    // exemplo E1 Henrique
-    //val queue = Queue(capacity = 4, arrivalTimeA = 2.0, arrivalTimeB = 3.0, timeServiceA = 1.0, timeServiceB = 2.0)
-
-    // exemplo slides aula
-    //numbers =  mutableListOf(0.3276, 0.8851, 0.1643, 0.5542, 0.6813, 0.7221, 0.9881)
-    //val queue = Queue(capacity = 3, arrivalTimeA = 1.0, arrivalTimeB = 2.0, timeServiceA = 3.0, timeServiceB = 6.0)
-
-    val scaler = scheduler(queue = queue, randomNums = numbers)
+    // FIla de saída n deve ter chegada, não sei como ficara com código assim
+    val queueExit = QueueImp(capacity = 5, arrivalTimes = Pair(0f, 0f), serviceTimes = Pair(2f, 3f), servers = 1)
+    val scaler = Scheduler(queueArrival = queueArrival, randomNums = numbers, queueExit = queueExit)
     scaler.init(42f)
 }
 
@@ -24,4 +16,6 @@ interface Event {
     fun getSingleEventTime() : Float
     fun getCurrentEventTime() : Float
     fun isArrival() : Boolean
+    fun isExit() : Boolean
+    fun isPassage() : Boolean
 }
