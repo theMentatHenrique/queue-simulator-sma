@@ -8,7 +8,8 @@ class Scheduler(
     private val queueArrival : Queue,
     private val queueExit : Queue,
     private var events : MutableList<Event> = mutableListOf(),
-    private var totalTime : Float = 0f
+    private var totalTime : Float = 0f,
+    private var count : Int = 0
 ) {
     fun init(seed : Float) {
         events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, "arrival" ))
@@ -87,8 +88,12 @@ class Scheduler(
         if (queueExit.status() < queueExit.capacity()) {
             if (queueExit.status() < queueExit.servers()) {
                 queueExit .increment(auxTime)
-                val time = queueExit.calcuateOperationTime(randomNums.removeAt(0), false)
-                events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
+                println(count)
+                count++
+                if (randomNums.isNotEmpty()) {
+                    val time = queueExit.calcuateOperationTime(randomNums.removeAt(0), false)
+                    events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
+                }
             }
         } else {
             queueExit.loss()
