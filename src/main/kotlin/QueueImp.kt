@@ -13,8 +13,12 @@ class QueueImp(
 ) : Queue {
 
 
-    override fun out() {
-       costumers--
+    override fun out(times: Float) {
+        if (status() == this.times.size) {
+            costumers--
+        }
+        this.times[costumers] += times
+        costumers--
     }
 
     override fun print() {

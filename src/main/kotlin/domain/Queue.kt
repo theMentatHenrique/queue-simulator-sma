@@ -6,7 +6,7 @@ interface Queue {
     fun servers() : Int
     fun increment(time : Float)
     fun capacity() : Int
-    fun out()
+    fun out(fl: Float)
     fun loss()
     fun calcuateOperationTime(time : Float, useArival : Boolean) : Float
 }
