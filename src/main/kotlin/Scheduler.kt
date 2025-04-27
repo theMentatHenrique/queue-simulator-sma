@@ -84,10 +84,9 @@ class Scheduler(
             val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), false)
             events.add(EventFactory.createEvent(type = "passage", singleTime = time, currentTime = totalTime + time ))
         }
-
         if (queueExit.status() < queueExit.capacity()) {
-            queueExit .increment(auxTime)
             if (queueExit.status() < queueExit.servers()) {
+                queueExit .increment(auxTime)
                 val time = queueExit.calcuateOperationTime(randomNums.removeAt(0), false)
                 events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
             }
@@ -97,7 +96,7 @@ class Scheduler(
     }
 
     private fun accumulateTime(event: Event) {
-        totalTime = event.getCurrentEventTime()
+        totalTime += event.getCurrentEventTime() - totalTime
     }
 
     private fun getNextEvent(): Event {

@@ -11,32 +11,12 @@ class QueueImp(
     private var lost: Int = 0,
     private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
 ) : Queue {
-
-
     override fun out(times: Float) {
         if (status() == this.times.size) {
             costumers--
         }
         this.times[costumers] += times
         costumers--
-    }
-
-    override fun print() {
-        var iterator = 0f
-        var total = 0f;
-        var percent = 0f
-        times.forEach {
-            total+=it
-        }
-        println("Estado da fila |  Tempo(segundos) | Probabilidade")
-        times.forEach {
-            val percAux  = (it/total) * 100f
-            println("${iterator}  | ${it}  | ${percAux}%")
-            iterator++
-            percent += percAux
-        }
-        println("Total | ${total} | ${percent}%")
-        println("Perdido:${lost}")
     }
 
     override fun calcuateOperationTime(time: Float, useArrival : Boolean): Float {
@@ -65,5 +45,23 @@ class QueueImp(
 
     override fun capacity(): Int {
         return capacity
+    }
+
+    override fun print() {
+        var iterator = 0f
+        var total = 0f;
+        var percent = 0f
+        times.forEach {
+            total+=it
+        }
+        println("Estado da fila |  Tempo(segundos) | Probabilidade")
+        times.forEach {
+            val percAux  = (it/total) * 100f
+            println("${iterator}  | ${it}  | ${percAux}%")
+            iterator++
+            percent += percAux
+        }
+        println("Total | ${total} | ${percent}%")
+        println("Perdido:${lost}")
     }
 }
