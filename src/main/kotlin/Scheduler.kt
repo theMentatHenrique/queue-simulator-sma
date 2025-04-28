@@ -11,56 +11,38 @@ class Scheduler(
     private var totalTime : Float = 0f,
 ) {
     fun init(seed : Float) {
-        events.add(EventFactory.createEvent(singleTime = seed, currentTime = seed, "arrival"))
-        stagger()
-        queueArrival.print()
-        queueExit.print()
+        events.add(EventFactory.createEvent(currentTime = seed, "arrival"))
     }
 
-     private fun stagger() {
+      fun start() {
          while(randomNums.isNotEmpty()) {
              val event = getNextEvent()
              if (event.isArrival()) {
                  arrival(event)
-             } else if (event.isPassage()) {
-                 passage(event)
-             } else {
+             } else if (event.isExit()) {
                  exit(event)
+             } else {
+                 passage(event)
              }
              events.remove(event)
          }
+          queueArrival.print()
+          queueExit.print()
      }
 
     private fun arrival(event: Event) {
         accumulateTime(event)
-
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
-            if (queueArrival.status() <= queueArrival.servers()) {
-                if (randomNums.isNotEmpty()) {
-                    val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), false)
-                    events.add(
-                        EventFactory.createEvent(
-                            type = "passage",
-                            singleTime = time,
-                            currentTime = totalTime + time
-                        )
-                    )
-                }
+            if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
+                createEvent("passage", totalTime + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
             }
         } else {
             queueArrival.loss()
         }
 
         if (randomNums.isNotEmpty()) {
-            val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), true)
-            events.add(
-                EventFactory.createEvent(
-                    type = "arrival",
-                    singleTime = time,
-                    currentTime = totalTime + time
-                )
-            )
+            createEvent("arrival", totalTime + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)))
         }
     }
 
@@ -68,8 +50,7 @@ class Scheduler(
         accumulateTime(event)
         queueExit.out()
         if (queueExit.status() >= queueExit.servers()) {
-            val time = queueExit.calcuateOperationTime(randomNums.removeAt(0), false)
-            events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
+            createEvent("exit", totalTime + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
         }
     }
 
@@ -77,14 +58,13 @@ class Scheduler(
         accumulateTime(event)
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers()) {
-            val time = queueArrival.calcuateOperationTime(randomNums.removeAt(0), false)
-            events.add(EventFactory.createEvent(type = "passage", singleTime = time, currentTime = totalTime + time ))
+            createEvent("passage", totalTime + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
         }
+
+        queueExit.increment()
         if (queueExit.status() < queueExit.capacity()) {
-            queueExit.increment()
             if (queueExit.status() <= queueExit.servers()) {
-                val time = queueExit.calcuateOperationTime(randomNums.removeAt(0), false)
-                events.add(EventFactory.createEvent(type = "exit", singleTime = time, currentTime = totalTime + time ))
+                createEvent("exit", totalTime + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
             }
         } else {
             queueExit.loss()
@@ -99,5 +79,14 @@ class Scheduler(
 
     private fun getNextEvent(): Event {
         return events.minByOrNull {it.getCurrentEventTime()}!!
+    }
+
+    private fun createEvent(type : String, time : Float) {
+        events.add(
+            EventFactory.createEvent(
+                type = type,
+                currentTime = time
+            )
+        )
     }
  }

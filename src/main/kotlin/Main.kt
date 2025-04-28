@@ -10,10 +10,10 @@ fun main() {
     val queueExit = QueueImp(capacity = 5, arrivalTimes = Pair(0f, 0f), serviceTimes = Pair(2f, 3f), servers = 1)
     val scaler = Scheduler(queueArrival = queueArrival, randomNums = numbers, queueExit = queueExit)
     scaler.init(42f)
+    scaler.start()
 }
 
 interface Event {
-    fun getSingleEventTime() : Float
     fun getCurrentEventTime() : Float
     fun isArrival() : Boolean
     fun isExit() : Boolean

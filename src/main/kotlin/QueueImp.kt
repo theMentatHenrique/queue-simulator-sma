@@ -19,13 +19,6 @@ class QueueImp(
         costumers--
     }
 
-    override fun calcuateOperationTime(time: Float, useArrival : Boolean): Float {
-        val pair = if (useArrival) {arrivalTimes} else {serviceTimes}
-        val init = pair.first
-        val end = pair.second
-        return (end - init ) * time + init
-    }
-
     override fun status() : Int {
         return costumers
     }
@@ -39,11 +32,28 @@ class QueueImp(
     }
 
     override fun incrementTime(time: Float) {
+        if (this.times.size == costumers) {
+            costumers--
+        }
         this.times[costumers] += time
     }
 
     override fun loss() {
         lost++
+    }
+
+    private fun calcuateOperationTime(time: Float, pair : Pair<Float, Float>): Float {
+        val init = pair.first
+        val end = pair.second
+        return (end - init) * time + init
+    }
+
+    override fun calcuateServiceTime(time: Float): Float {
+        return calcuateOperationTime(time, serviceTimes)
+    }
+
+    override fun calcuateArrivalTime(time: Float): Float {
+        return calcuateOperationTime(time, arrivalTimes)
     }
 
     override fun capacity(): Int {

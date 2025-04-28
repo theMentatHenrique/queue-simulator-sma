@@ -9,5 +9,6 @@ interface Queue {
     fun capacity() : Int
     fun out()
     fun loss()
-    fun calcuateOperationTime(time : Float, useArival : Boolean) : Float
+    fun calcuateServiceTime(time : Float) : Float
+    fun calcuateArrivalTime(time : Float) : Float
 }

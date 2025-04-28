@@ -3,11 +3,8 @@ package br.com.pucrs.factory
 import br.com.pucrs.Event
 
 object EventFactory {
-    fun createEvent(singleTime : Float, currentTime : Float, type : String) : Event {
+    fun createEvent(currentTime : Float, type : String) : Event {
         return object : Event {
-            override fun getSingleEventTime(): Float {
-                return singleTime
-            }
             override fun getCurrentEventTime(): Float {
                 return currentTime
             }
