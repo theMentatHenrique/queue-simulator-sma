@@ -1,6 +1,7 @@
 package br.com.pucrs
 
 import br.com.pucrs.domain.Queue
+import kotlin.math.cos
 
 class QueueImp(
     val servers: Int = 1,
@@ -11,11 +12,10 @@ class QueueImp(
     private var lost: Int = 0,
     private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
 ) : Queue {
-    override fun out(times: Float) {
+    override fun out() {
         if (status() == this.times.size) {
             costumers--
         }
-        this.times[costumers] += times
         costumers--
     }
 
@@ -34,9 +34,12 @@ class QueueImp(
         return servers
     }
 
-    override fun increment(time : Float) {
-        this.times[costumers] += time
+    override fun increment() {
         costumers++
+    }
+
+    override fun incrementTime(time: Float) {
+        this.times[costumers] += time
     }
 
     override fun loss() {

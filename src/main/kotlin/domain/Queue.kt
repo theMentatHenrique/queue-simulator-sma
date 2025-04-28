@@ -4,9 +4,10 @@ interface Queue {
     fun print()
     fun status() : Int
     fun servers() : Int
-    fun increment(time : Float)
+    fun increment()
+    fun incrementTime(time : Float)
     fun capacity() : Int
-    fun out(fl: Float)
+    fun out()
     fun loss()
     fun calcuateOperationTime(time : Float, useArival : Boolean) : Float
 }
