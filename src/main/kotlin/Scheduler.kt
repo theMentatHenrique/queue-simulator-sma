@@ -8,13 +8,10 @@ class Scheduler(
     private val queueArrival : Queue,
     private val queueExit : Queue,
     private var events : MutableList<Event> = mutableListOf(),
-    private var totalTime : Float = 0f,
+    private var TG : Float = 0f,
 ) {
-    fun init(seed : Float) {
-        events.add(EventFactory.createEvent(currentTime = seed, "arrival"))
-    }
-
-      fun start() {
+      fun start(seed: Float) {
+          events.add(EventFactory.createEvent(currentTime = seed, "arrival"))
          while(randomNums.isNotEmpty()) {
              val event = getNextEvent()
              if (event.isArrival()) {
@@ -34,23 +31,21 @@ class Scheduler(
         accumulateTime(event)
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
-            if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
-                createEvent("passage", totalTime + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
+            if (queueArrival.status() <= queueArrival.servers()) {
+                createEvent("passage", TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
             }
         } else {
             queueArrival.loss()
         }
 
-        if (randomNums.isNotEmpty()) {
-            createEvent("arrival", totalTime + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)))
-        }
+        createEvent("arrival", TG + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)))
     }
 
     private fun exit(event : Event) {
         accumulateTime(event)
         queueExit.out()
         if (queueExit.status() >= queueExit.servers()) {
-            createEvent("exit", totalTime + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
+            createEvent("exit", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
         }
     }
 
@@ -58,13 +53,13 @@ class Scheduler(
         accumulateTime(event)
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers()) {
-            createEvent("passage", totalTime + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
+            createEvent("passage", TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
         }
 
-        queueExit.increment()
         if (queueExit.status() < queueExit.capacity()) {
+            queueExit.increment()
             if (queueExit.status() <= queueExit.servers()) {
-                createEvent("exit", totalTime + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
+                createEvent("exit", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
             }
         } else {
             queueExit.loss()
@@ -72,9 +67,9 @@ class Scheduler(
     }
 
     private fun accumulateTime(event: Event) {
-        queueExit.incrementTime(event.getCurrentEventTime() - totalTime)
-        queueArrival.incrementTime(event.getCurrentEventTime() - totalTime)
-        totalTime = event.getCurrentEventTime()
+        queueExit.incrementTime(event.getCurrentEventTime() - TG)
+        queueArrival.incrementTime(event.getCurrentEventTime() - TG)
+        TG = event.getCurrentEventTime()
     }
 
     private fun getNextEvent(): Event {
