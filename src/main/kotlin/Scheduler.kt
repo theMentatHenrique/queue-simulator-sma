@@ -37,7 +37,6 @@ class Scheduler(
         } else {
             queueArrival.loss()
         }
-
         createEvent("arrival", TG + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)))
     }
 

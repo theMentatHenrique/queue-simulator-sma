@@ -13,9 +13,6 @@ class QueueImp(
     private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
 ) : Queue {
     override fun out() {
-        if (status() == this.times.size) {
-            costumers--
-        }
         costumers--
     }
 
@@ -32,9 +29,6 @@ class QueueImp(
     }
 
     override fun incrementTime(time: Float) {
-        if (this.times.size == costumers) {
-            costumers--
-        }
         this.times[costumers] += time
     }
 
