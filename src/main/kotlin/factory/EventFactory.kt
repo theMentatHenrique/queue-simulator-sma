@@ -12,8 +12,12 @@ object EventFactory {
                 return "arrival" == type
             }
 
-            override fun isExit(): Boolean {
-                return "exit" == type
+            override fun isExitQueue(): Boolean {
+               return "exit" == type
+            }
+
+            override fun isExitSystem(): Boolean {
+                return "exitSystem" == type
             }
 
             override fun isPassage(): Boolean {

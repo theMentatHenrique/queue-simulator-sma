@@ -2,6 +2,7 @@ package br.com.pucrs
 
 import br.com.pucrs.domain.Queue
 import br.com.pucrs.factory.EventFactory
+import kotlin.random.Random
 
 class Scheduler(
     var randomNums : MutableList<Float> = mutableListOf(),
@@ -16,8 +17,10 @@ class Scheduler(
              val event = getNextEvent()
              if (event.isArrival()) {
                  arrival(event)
-             } else if (event.isExit()) {
-                 exit(event)
+             } else if (event.isExitSystem()) {
+                 exitSystem(event)
+             } else if(event.isExitQueue()) {
+                 exitQueue(event)
              } else {
                  passage(event)
              }
@@ -32,7 +35,9 @@ class Scheduler(
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
             if (queueArrival.status() <= queueArrival.servers()) {
-                createEvent("passage", TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
+                createEvent(if (Random.nextFloat() < 0.7f) "passage" else "exit",
+                    TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0))
+                )
             }
         } else {
             queueArrival.loss()
@@ -40,28 +45,35 @@ class Scheduler(
         createEvent("arrival", TG + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)))
     }
 
-    private fun exit(event : Event) {
+    private fun exitSystem(event : Event) {
         accumulateTime(event)
         queueExit.out()
         if (queueExit.status() >= queueExit.servers()) {
-            createEvent("exit", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
+            createEvent("exitSystem", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
         }
+    }
+
+    private fun exitQueue(ev : Event) {
+        accumulateTime(ev)
+        queueArrival.out()
+        if (queueArrival.status() >= queueArrival.servers()) {
+            createEvent(type = if (Random.nextFloat() < 0.7f) "passage" else "exit",
+                time = TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
+        }
+
     }
 
     private fun passage(event : Event) {
         accumulateTime(event)
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers()) {
-            createEvent("passage", TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
+            createEvent(if (Random.nextFloat() < 0.7f) "passage" else "exit",
+                TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)))
         }
 
-        if (queueExit.status() < queueExit.capacity()) {
-            queueExit.increment()
-            if (queueExit.status() <= queueExit.servers()) {
-                createEvent("exit", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
-            }
-        } else {
-            queueExit.loss()
+        queueExit.increment()
+        if (queueExit.status() <= queueExit.servers()) {
+            createEvent("exitSystem", TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)))
         }
     }
 

@@ -9,12 +9,13 @@ fun main() {
     // FIla de saída n deve ter chegada, não sei como ficara com código assim
     val queueExit = QueueImp(capacity = 5, arrivalTimes = Pair(0f, 0f), serviceTimes = Pair(2f, 3f), servers = 1)
     val scaler = Scheduler(queueArrival = queueArrival, randomNums = numbers, queueExit = queueExit)
-    scaler.start(42f)
+    scaler.start(2f)
 }
 
 interface Event {
     fun getCurrentEventTime() : Float
     fun isArrival() : Boolean
-    fun isExit() : Boolean
+    fun isExitQueue() : Boolean
+    fun isExitSystem() : Boolean
     fun isPassage() : Boolean
 }

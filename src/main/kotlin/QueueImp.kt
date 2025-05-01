@@ -29,6 +29,8 @@ class QueueImp(
     }
 
     override fun incrementTime(time: Float) {
+        // TODO: validar este caso
+        if (costumers == times.size) return;
         this.times[costumers] += time
     }
 
