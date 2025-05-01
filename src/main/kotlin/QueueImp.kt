@@ -8,12 +8,13 @@ class QueueImp(
     val capacity: Int = 0, // k
     val arrivalTimes: Pair<Float, Float> = 0f to 0f,
     val serviceTimes: Pair<Float, Float> = 0f to 0f,
-    private var costumers: Int = 0,
-    private var lost: Int = 0,
-    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f},
-    private val queues : Map<Float, String>
+    val queues: MutableMap<Float, String> = mutableMapOf() // Inicializado como MutableMap
 
 ) : Queue {
+    private var costumers: Int = 0
+    private var lost: Int = 0
+    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
+
 
     override fun out() {
         costumers--

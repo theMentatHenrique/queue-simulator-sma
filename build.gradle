@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0") // ou a versão mais recente
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
 }
 
 test {

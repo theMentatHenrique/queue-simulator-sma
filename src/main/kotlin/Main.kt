@@ -1,15 +1,16 @@
 package br.com.pucrs
 
+import br.com.pucrs.factory.QueueFactory
 import br.com.pucrs.factory.RandomNumbersManager
 
 fun main() {
     var numbers = RandomNumbersManager.generateAndSave("random_numbers.txt").toMutableList()
-    val queueArrival = QueueImp(capacity = 3, arrivalTimes = Pair(1f, 4f), serviceTimes = Pair(3f, 4f), servers = 2)
+    var factory = QueueFactory()
+    val queues = factory.readQueuesAndNetworksFromYaml("/Users/henriquefeijopaim/Documents/Pessoal/queue-simulator-sma/src/main/kotlin/factory/model.yml")
+    factory.getArrivalTime()
 
-    // FIla de saída n deve ter chegada, não sei como ficara com código assim
-    val queueExit = QueueImp(capacity = 5, arrivalTimes = Pair(0f, 0f), serviceTimes = Pair(2f, 3f), servers = 1)
-    val scaler = Scheduler(queueArrival = queueArrival, randomNums = numbers, queueExit = queueExit)
-    scaler.start(2f)
+   /* val scaler = Scheduler(queueArrival = queues[0], randomNums = numbers, queueExit = queues[1])
+    scaler.start(factory.getArrivalTime())*/
 }
 
 interface Event {
