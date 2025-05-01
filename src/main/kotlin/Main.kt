@@ -4,12 +4,11 @@ import br.com.pucrs.factory.QueueFactory
 import br.com.pucrs.factory.RandomNumbersManager
 
 fun main() {
-    var numbers = RandomNumbersManager.generateAndSave("random_numbers.txt").toMutableList()
     var factory = QueueFactory()
     val queues = factory.readQueuesAndNetworksFromYaml("/Users/henriquefeijopaim/Documents/Pessoal/queue-simulator-sma/src/main/kotlin/factory/model.yml")
-    factory.getArrivalTime()
+    var numbers = RandomNumbersManager.generateNumbersByLimit(limit = factory.getrandom(), factory.getArrivalTime().toInt())
 
-    val scaler = Scheduler(queues = queues, randomNums = numbers)
+    val scaler = Scheduler(queues = queues, randomNums = numbers.toMutableList())
     scaler.start(factory.getArrivalTime())
 }
 

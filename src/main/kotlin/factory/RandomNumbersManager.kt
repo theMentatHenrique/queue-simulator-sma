@@ -1,43 +1,16 @@
 package br.com.pucrs.factory
 import java.io.FileWriter
+import kotlin.random.Random
 
 object RandomNumbersManager {
-    fun generateAndSave(fileName : String) : List<Float> {
-        val numbers = generateRandomNumbers(
-            size = 100000,
-            seed = 42,
-            a = 3432432,
-            c = 98753,
-            m = 354325325342534
-        )
-        saveCSV(numbers, fileName)
-        return numbers
-    }
 
-
-    private fun generateRandomNumbers(
-        size: Int = 1000,
-        seed: Long,
-        a: Long,
-        c: Long,
-        m: Long
-    ): List<Float> {
-        val numbers = mutableListOf(seed.toFloat())
-        var actual = seed.toDouble()
-        for (i in 1 until size) {
-            actual = (a * actual + c) % m
-            numbers.add((actual / m).toFloat())
+    fun generateNumbersByLimit(limit: Int, seed: Int) : List<Float>{
+       val seed = Random(seed)
+        val randoms = mutableListOf<Float>()
+        for (i in 0..limit) {
+            randoms.add(seed.nextFloat())
         }
-        return numbers
+        return randoms;
     }
 
-    private fun saveCSV(list: List<Float>, fileName: String) {
-        val fileWriter = FileWriter(fileName)
-        fileWriter.use { writer ->
-            list.forEach { linha ->
-                writer.append("- ${linha.toString()}")
-                writer.append("\n")
-            }
-        }
-    }
 }

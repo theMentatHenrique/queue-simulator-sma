@@ -34,7 +34,7 @@ class QueueImp(
 
     override fun incrementTime(time: Float) {
         // TODO: validar este caso
-        if (costumers == times.size) return;
+        if (costumers >= times.size) return;
         this.times[costumers] += time
     }
 
@@ -57,7 +57,8 @@ class QueueImp(
     }
 
     override fun nextQueue(prob: Float): String? {
-        var sum = queues.keys.min();
+        val ordered = queues.entries.sortedBy { it.key }
+        var sum = ordered[0].key;
         for (it in queues) {
             if (prob < sum) {
                 return it.value

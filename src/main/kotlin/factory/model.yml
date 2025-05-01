@@ -20,11 +20,8 @@ queues:
 network: 
 -  source: Q1
    target: Q2
-   probability: 0.7
+   probability: 1.0
 
 rndnumbersPerSeed: 100000
 seeds:
 - 42
-- 3432432
-- 98753
-- 354325325342534
