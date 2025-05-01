@@ -9,7 +9,7 @@ import java.io.File
 class QueueFactory {
     private var arrivalTime : Float = 0.0f
 
-    fun readQueuesAndNetworksFromYaml(filePath: String): Map<String, QueueImp> {
+    fun readQueuesAndNetworksFromYaml(filePath: String): List<QueueImp> {
         val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule.Builder().build())
         val yamlData: Map<String, Any> = mapper.readValue(File(filePath), Map::class.java) as Map<String, Any>
 
@@ -46,7 +46,7 @@ class QueueFactory {
             }
         }
 
-        return queuesMap
+        return queuesMap.values.toList()
     }
 
     fun getArrivalTime() : Float {

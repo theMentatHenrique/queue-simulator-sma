@@ -9,8 +9,8 @@ fun main() {
     val queues = factory.readQueuesAndNetworksFromYaml("/Users/henriquefeijopaim/Documents/Pessoal/queue-simulator-sma/src/main/kotlin/factory/model.yml")
     factory.getArrivalTime()
 
-   /* val scaler = Scheduler(queueArrival = queues[0], randomNums = numbers, queueExit = queues[1])
-    scaler.start(factory.getArrivalTime())*/
+    val scaler = Scheduler(queues = queues, randomNums = numbers)
+    scaler.start(factory.getArrivalTime())
 }
 
 interface Event {

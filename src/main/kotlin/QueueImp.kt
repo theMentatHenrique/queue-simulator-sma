@@ -57,7 +57,7 @@ class QueueImp(
     }
 
     override fun nextQueue(prob: Float): String? {
-        var sum = 0f;
+        var sum = queues.keys.min();
         for (it in queues) {
             if (prob < sum) {
                 return it.value

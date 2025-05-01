@@ -6,8 +6,6 @@ import kotlin.random.Random
 
 class Scheduler(
     var randomNums : MutableList<Float> = mutableListOf(),
-    private val queueArrival : Queue,
-    private val queueExit : Queue,
     private var events : MutableList<Event> = mutableListOf(),
     private val queues : List<Queue>,
     private var TG : Float = 0f,
@@ -32,8 +30,9 @@ class Scheduler(
             }
             events.remove(event)
          }
-        queueArrival.print()
-        queueExit.print()
+        queues.forEach{
+            it.print()
+        }
     }
 
     private fun getQueueById(id : String) : Queue {
@@ -42,10 +41,6 @@ class Scheduler(
 
     private fun arrival(event: Event) {
         val queueArrivalId = event.queueArrival()
-        if (queueArrivalId == null) {
-            println("Arrival nulo")
-            return
-        }
 
         val queueArrival = getQueueById(queueArrivalId)
         accumulateTime(event)
@@ -60,8 +55,7 @@ class Scheduler(
                         TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
                         queueArrivalId,
                         getQueueById(nextQueue).queueId()
-                    )
-                } ?: run {
+                    )} ?: run {
                     // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
                     createEvent(
                         "exit",
@@ -74,6 +68,7 @@ class Scheduler(
         } else {
             queueArrival.loss()
         }
+
         if(randomNums.isNotEmpty()) {
             createEvent(
                 "arrival",
@@ -101,6 +96,7 @@ class Scheduler(
 
     private fun exitQueue(ev : Event) {
         accumulateTime(ev)
+        val queueArrival = getQueueById(ev.queueArrival())
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
             val random = Random.nextFloat()
@@ -165,8 +161,6 @@ class Scheduler(
     }
 
     private fun accumulateTime(event: Event) {
-        queueExit.incrementTime(event.getCurrentEventTime() - TG)
-        queueArrival.incrementTime(event.getCurrentEventTime() - TG)
         queues.forEach {
             it.incrementTime(event.getCurrentEventTime() - TG)
         }
