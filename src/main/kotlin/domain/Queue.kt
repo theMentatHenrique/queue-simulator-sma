@@ -11,4 +11,6 @@ interface Queue {
     fun loss()
     fun calcuateServiceTime(time : Float) : Float
     fun calcuateArrivalTime(time : Float) : Float
+    fun nextQueue(prob : Float) : String?
+    fun queueId() : String
 }

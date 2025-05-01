@@ -1,17 +1,20 @@
 package br.com.pucrs
 
 import br.com.pucrs.domain.Queue
-import kotlin.math.cos
 
 class QueueImp(
+    val id : String,
     val servers: Int = 1,
     val capacity: Int = 0, // k
     val arrivalTimes: Pair<Float, Float> = 0f to 0f,
     val serviceTimes: Pair<Float, Float> = 0f to 0f,
     private var costumers: Int = 0,
     private var lost: Int = 0,
-    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
+    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f},
+    private val queues : Map<Float, String>
+
 ) : Queue {
+
     override fun out() {
         costumers--
     }
@@ -50,6 +53,22 @@ class QueueImp(
 
     override fun calcuateArrivalTime(time: Float): Float {
         return calcuateOperationTime(time, arrivalTimes)
+    }
+
+    override fun nextQueue(prob: Float): String? {
+        var sum = 0f;
+        for (it in queues) {
+            if (prob < sum) {
+                return it.value
+            } else {
+                sum += it.key
+            }
+        }
+        return null;
+    }
+
+    override fun queueId() : String {
+        return id
     }
 
     override fun capacity(): Int {

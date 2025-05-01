@@ -3,7 +3,7 @@ package br.com.pucrs.factory
 import br.com.pucrs.Event
 
 object EventFactory {
-    fun createEvent(currentTime : Float, type : String) : Event {
+    fun createEvent(currentTime : Float, type : String, queueArrival : String, queueExit : String) : Event {
         return object : Event {
             override fun getCurrentEventTime(): Float {
                 return currentTime
@@ -22,6 +22,14 @@ object EventFactory {
 
             override fun isPassage(): Boolean {
                 return "passage" == type
+            }
+
+            override fun queueArrival(): String {
+                return queueArrival
+            }
+
+            override fun queueExit(): String {
+               return queueExit
             }
         }
     }
