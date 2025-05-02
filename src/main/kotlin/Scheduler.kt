@@ -13,7 +13,7 @@ class Scheduler(
      lateinit var seed : Random
 
     fun start(startTime: Float) {
-        seed = Random(2)
+        seed = Random
         createEvent(
             "arrival",
             startTime,
@@ -159,8 +159,6 @@ class Scheduler(
                 queueExit.queueId(),
                 queueExit.queueId()
             )
-        } else {
-            queueExit.loss()
         }
     }
 
