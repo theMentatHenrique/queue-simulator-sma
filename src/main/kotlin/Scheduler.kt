@@ -10,7 +10,10 @@ class Scheduler(
     private val queues : List<Queue>,
     private var TG : Float = 0f,
 ) {
+     lateinit var seed : Random
+
     fun start(startTime: Float) {
+        seed = Random(2)
         createEvent(
             "arrival",
             startTime,
@@ -47,7 +50,7 @@ class Scheduler(
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
             if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
-                val random = Random.nextFloat()
+                val random = seed.nextFloat()
                 val nextQueue = queueArrival.nextQueue(random)
                 nextQueue?.let {
                     createEvent(
@@ -99,7 +102,7 @@ class Scheduler(
         val queueArrival = getQueueById(ev.queueArrival())
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
-            val random = Random.nextFloat()
+            val random = seed.nextFloat()
             val nextQueue = queueArrival.nextQueue(random)
             nextQueue?.let {
                 createEvent(
@@ -129,7 +132,7 @@ class Scheduler(
 
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
-            val random = Random.nextFloat()
+            val random = seed.nextFloat()
             val nextQueue = queueArrival.nextQueue(random)
             nextQueue?.let {
                 createEvent(
