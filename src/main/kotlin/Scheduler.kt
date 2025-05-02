@@ -43,30 +43,13 @@ class Scheduler(
     }
 
     private fun arrival(event: Event) {
-        val queueArrivalId = event.queueArrival()
-
-        val queueArrival = getQueueById(queueArrivalId)
         accumulateTime(event)
+        val queueArrivalId = event.queueArrival()
+        val queueArrival = getQueueById(queueArrivalId)
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
             if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
-                val random = seed.nextFloat()
-                val nextQueue = queueArrival.nextQueue(random)
-                nextQueue?.let {
-                    createEvent(
-                        type = "passage",
-                        TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                        queueArrivalId,
-                        nextQueue
-                    )} ?: run {
-                    // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
-                    createEvent(
-                        "exit",
-                        TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                        queueArrivalId,
-                        queueArrivalId
-                    )
-                }
+               createEventByNextQueue(queueArrival)
             }
         } else {
             queueArrival.loss()
@@ -102,26 +85,8 @@ class Scheduler(
         val queueArrival = getQueueById(ev.queueArrival())
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
-            val random = seed.nextFloat()
-            val nextQueue = queueArrival.nextQueue(random)
-            nextQueue?.let {
-                createEvent(
-                    type = "passage",
-                    TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                    queueArrival = queueArrival.queueId(),
-                    nextQueue
-                )
-            } ?: run {
-                // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
-                createEvent(
-                    "exit",
-                    TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                    queueArrival.queueId(),
-                    queueArrival.queueId()
-                )
-            }
+            createEventByNextQueue(queueArrival)
         }
-
     }
 
     private fun passage(event : Event) {
@@ -131,35 +96,42 @@ class Scheduler(
 
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
-            val random = seed.nextFloat()
-            val nextQueue = queueArrival.nextQueue(random)
-            nextQueue?.let {
-                createEvent(
-                    type = "passage",
-                    TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                    queueArrival = queueArrival.queueId(),
-                    nextQueue
-                )
-            } ?: run {
-                // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
-                createEvent(
-                    "exit",
-                    TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
-                    queueArrival.queueId(),
-                    queueArrival.queueId()
-                )
-            }
+           createEventByNextQueue(queueArrival)
         }
 
-        queueExit.increment()
-        if (queueExit.status() <= queueExit.servers() && randomNums.isNotEmpty()) {
+        if (queueExit.status() < queueExit.servers() && randomNums.isNotEmpty()) {
+            queueExit.increment()
             createEvent(
                 "exitSystem",
                 TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
                 queueExit.queueId(),
                 queueExit.queueId()
             )
+        } else {
+            queueExit.loss()
         }
+    }
+
+    private fun createEventByNextQueue(queueOrigin : Queue) {
+        val random = seed.nextFloat()
+        val nextQueue = queueOrigin.nextQueue(random)
+        nextQueue?.let {
+            createEvent(
+                type = "passage",
+                TG + queueOrigin.calcuateServiceTime(randomNums.removeAt(0)),
+                queueArrival = queueOrigin.queueId(),
+                nextQueue
+            )
+        } ?: run {
+            // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
+            createEvent(
+                "exit",
+                TG + queueOrigin.calcuateServiceTime(randomNums.removeAt(0)),
+                queueOrigin.queueId(),
+                queueOrigin.queueId()
+            )
+        }
+
     }
 
     private fun accumulateTime(event: Event) {
