@@ -120,7 +120,6 @@ class Scheduler(
                     queueArrival.queueId()
                 )
             }
-
         }
 
     }
@@ -160,6 +159,8 @@ class Scheduler(
                 queueExit.queueId(),
                 queueExit.queueId()
             )
+        } else {
+            queueExit.loss()
         }
     }
 
