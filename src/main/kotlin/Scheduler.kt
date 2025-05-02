@@ -57,7 +57,7 @@ class Scheduler(
                         type = "passage",
                         TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
                         queueArrivalId,
-                        getQueueById(nextQueue).queueId()
+                        nextQueue
                     )} ?: run {
                     // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
                     createEvent(
@@ -109,7 +109,7 @@ class Scheduler(
                     type = "passage",
                     TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
                     queueArrival = queueArrival.queueId(),
-                    getQueueById(nextQueue).queueId()
+                    nextQueue
                 )
             } ?: run {
                 // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
@@ -138,7 +138,7 @@ class Scheduler(
                     type = "passage",
                     TG + queueArrival.calcuateServiceTime(randomNums.removeAt(0)),
                     queueArrival = queueArrival.queueId(),
-                    getQueueById(nextQueue).queueId()
+                    nextQueue
                 )
             } ?: run {
                 // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
