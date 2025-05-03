@@ -14,6 +14,9 @@ class QueueImp(
     private var costumers: Int = 0
     private var lost: Int = 0
     private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
+    private var countQ2 : Int = 0
+    private var countQ3 : Int = 0
+    private var count : Int = 0
 
 
     override fun out() {
@@ -53,15 +56,23 @@ class QueueImp(
     }
 
     override fun calcuateArrivalTime(time: Float): Float {
+        if (arrivalTimes.first == 0f && arrivalTimes.second == 0f) {
+            println("zerado bixo")
+        }
         return calcuateOperationTime(time, arrivalTimes)
     }
 
     override fun nextQueue(prob: Float): String? {
         if (queues.isEmpty()) return null
-        val ordered = queues.entries.sortedBy { it.key }
-        var sum = ordered[0].key;
+        var sum = queues.keys.first()
         for (it in queues) {
             if (prob < sum) {
+                if (it.value == "Q3") {
+                    countQ3++
+                } else if (it.value == "Q2") {
+                    countQ2++
+                }
+                count++
                 return it.value
             } else {
                 sum += it.key
@@ -69,6 +80,7 @@ class QueueImp(
         }
         return null;
     }
+
 
     override fun queueId() : String {
         return id

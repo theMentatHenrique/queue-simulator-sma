@@ -11,7 +11,7 @@ class Scheduler(
     private val queues : List<Queue>,
     private var TG : Float = 0f,
 ) {
-     lateinit var seed : Random
+    lateinit var seed : Random
 
     fun start(startTime: Float) {
         seed = Random
@@ -59,6 +59,7 @@ class Scheduler(
         }
 
         if(randomNums.isNotEmpty()) {
+
             createEvent(
                 "arrival",
                 TG + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)),
@@ -72,6 +73,7 @@ class Scheduler(
         accumulateTime(event)
         // a fila que chega é a que esta tratando a saída
         val queueExit = getQueueById(event.queueArrival())
+
         queueExit.out()
         if (queueExit.status() >= queueExit.servers() && randomNums.isNotEmpty()) {
             createEvent(
@@ -86,6 +88,7 @@ class Scheduler(
     private fun exitQueue(ev : Event) {
         accumulateTime(ev)
         val queueArrival = getQueueById(ev.queueArrival())
+
         queueArrival.out()
         if (queueArrival.status() >= queueArrival.servers() && randomNums.isNotEmpty()) {
             createEventByNextQueue(queueArrival)
