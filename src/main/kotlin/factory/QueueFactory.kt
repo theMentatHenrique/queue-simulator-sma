@@ -9,6 +9,7 @@ import java.io.File
 class QueueFactory {
     private var arrivalTime : Float = 0f
     private var rndnumbersPerSeed : Int = 0
+    private var seeds = mutableListOf<Int>()
 
     fun readQueuesAndNetworksFromYaml(absolutePath: String): List<QueueImp> {
         val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule.Builder().build())
@@ -16,7 +17,8 @@ class QueueFactory {
 
         val queuesData = yamlData["queues"] as? Map<String, Map<String, Any>> ?: emptyMap()
         val networkData = yamlData["network"] as? List<Map<String, Any>> ?: emptyList()
-
+        val seedsData = yamlData["seeds"] as? List<Int> ?: emptyList()
+        seeds.addAll(seedsData)
         val queuesList = mutableListOf<QueueImp>() // Mudança aqui: agora é uma lista
         val queuesMapTemporario = mutableMapOf<String, QueueImp>() // Mapa temporário para referenciar na rede
 
@@ -62,8 +64,12 @@ class QueueFactory {
         return arrivalTime
     }
 
-    fun getrandom() : Int {
+    fun rndnumbersPerSeed() : Int {
         return rndnumbersPerSeed
+    }
+
+    fun getSeeds() : MutableList<Int> {
+        return seeds
     }
 
 }

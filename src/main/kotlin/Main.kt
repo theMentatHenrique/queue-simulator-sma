@@ -8,7 +8,7 @@ fun main() {
 
     var factory = QueueFactory()
     val queues = factory.readQueuesAndNetworksFromYaml(getAbsolutePath("model.yml"))
-    val numbers = RandomNumbersManager.generateNumbersByLimit(limit = factory.getrandom(), factory.getArrivalTime().toInt())
+    val numbers = RandomNumbersManager.generateNumbersByLimit(limit = factory.rndnumbersPerSeed(), factory.getSeeds()[0])
     val scaler = Scheduler(queues = queues, randomNums = numbers.toMutableList())
     scaler.start(factory.getArrivalTime())
 }
