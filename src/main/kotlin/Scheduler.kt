@@ -59,7 +59,6 @@ class Scheduler(
         }
 
         if(randomNums.isNotEmpty()) {
-
             createEvent(
                 "arrival",
                 TG + queueArrival.calcuateArrivalTime(randomNums.removeAt(0)),
