@@ -10,9 +10,9 @@ class QueueFactory {
     private var arrivalTime : Float = 0f
     private var rndnumbersPerSeed : Int = 0
 
-    fun readQueuesAndNetworksFromYaml(filePath: String): List<QueueImp> {
+    fun readQueuesAndNetworksFromYaml(absolutePath: String): List<QueueImp> {
         val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule.Builder().build())
-        val yamlData: Map<String, Any> = mapper.readValue(File(filePath), Map::class.java) as Map<String, Any>
+        val yamlData: Map<String, Any> = mapper.readValue(File(absolutePath), Map::class.java) as Map<String, Any>
 
         val queuesData = yamlData["queues"] as? Map<String, Map<String, Any>> ?: emptyMap()
         val networkData = yamlData["network"] as? List<Map<String, Any>> ?: emptyList()
@@ -21,7 +21,7 @@ class QueueFactory {
         val queuesMapTemporario = mutableMapOf<String, QueueImp>() // Mapa temporário para referenciar na rede
 
         // Ler os parâmetros globais e popular as variáveis da classe
-        val rootNode = mapper.readTree(File(filePath))
+        val rootNode = mapper.readTree(File(absolutePath))
         rndnumbersPerSeed = rootNode.get("rndnumbersPerSeed")?.asInt() ?: 0
         arrivalTime = rootNode.get("arrivals")?.get("Q1")?.asDouble()?.toFloat() ?: 0f
 
@@ -57,6 +57,7 @@ class QueueFactory {
 
         return queuesList // Retorna a lista de QueueImp
     }
+
     fun getArrivalTime() : Float {
         return arrivalTime
     }
@@ -64,4 +65,5 @@ class QueueFactory {
     fun getrandom() : Int {
         return rndnumbersPerSeed
     }
+
 }
