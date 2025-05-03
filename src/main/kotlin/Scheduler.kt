@@ -46,6 +46,7 @@ class Scheduler(
         accumulateTime(event)
         val queueArrivalId = event.queueArrival()
         val queueArrival = getQueueById(queueArrivalId)
+
         if (queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
             if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
@@ -99,14 +100,16 @@ class Scheduler(
            createEventByNextQueue(queueArrival)
         }
 
-        if (queueExit.status() < queueExit.servers() && randomNums.isNotEmpty()) {
+        if (queueExit.status() < queueExit.capacity()) {
             queueExit.increment()
-            createEvent(
-                "exitSystem",
-                TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
-                queueExit.queueId(),
-                queueExit.queueId()
-            )
+            if (queueExit.status() <= queueExit.servers() && randomNums.isNotEmpty()) {
+                createEvent(
+                    "exitSystem",
+                    TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
+                    queueExit.queueId(),
+                    queueExit.queueId()
+                )
+            }
         } else {
             queueExit.loss()
         }

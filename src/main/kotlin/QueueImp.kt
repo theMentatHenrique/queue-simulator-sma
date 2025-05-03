@@ -57,6 +57,7 @@ class QueueImp(
     }
 
     override fun nextQueue(prob: Float): String? {
+        if (queues.isEmpty()) return null
         val ordered = queues.entries.sortedBy { it.key }
         var sum = ordered[0].key;
         for (it in queues) {
