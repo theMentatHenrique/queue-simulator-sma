@@ -4,7 +4,7 @@ import br.com.pucrs.domain.Queue
 
 class QueueImp(
     val id : String,
-    val servers: Int = 1,
+    val servers: Int = 0,
     val capacity: Int = 0, // k
     val arrivalTimes: Pair<Float, Float> = 0f to 0f,
     val serviceTimes: Pair<Float, Float> = 0f to 0f,
@@ -72,6 +72,10 @@ class QueueImp(
 
     override fun queueId() : String {
         return id
+    }
+
+    override fun isInfinity(): Boolean {
+        return capacity == 0
     }
 
     override fun capacity(): Int {

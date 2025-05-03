@@ -1,6 +1,7 @@
 package br.com.pucrs.factory
 
-import br.com.pucrs.Event
+import br.com.pucrs.domain.Event
+
 
 object EventFactory {
     fun createEvent(currentTime : Float, type : String, queueArrival : String, queueExit : String) : Event {

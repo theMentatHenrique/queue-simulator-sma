@@ -13,4 +13,5 @@ interface Queue {
     fun calcuateArrivalTime(time : Float) : Float
     fun nextQueue(prob : Float) : String?
     fun queueId() : String
+    fun isInfinity() : Boolean
 }

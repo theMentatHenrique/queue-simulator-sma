@@ -1,11 +1,11 @@
 
 !PARAMETERS
 arrivals:
-   Q1: 2.0
+   Q1: 500.0
 
 queues: 
-   Q1: 
-      capacity: 3
+   Q1:
+      servers: 1
       minArrival: 2.0
       maxArrival: 4.0
       minService: 1.0
@@ -27,17 +27,6 @@ network:
    target: Q2
    probability: 0.8
 
--  source: Q1
-   target: Q3
-   probability: 0.2
-
--  source: Q2
-   target: Q1
-   probability: 0.3
-
--  source: Q2
-   target: Q2
-   probability: 0.5
 
 rndnumbersPerSeed: 100000
 seeds:

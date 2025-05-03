@@ -1,5 +1,6 @@
 package br.com.pucrs
 
+import br.com.pucrs.domain.Event
 import br.com.pucrs.domain.Queue
 import br.com.pucrs.factory.EventFactory
 import kotlin.random.Random
@@ -34,6 +35,7 @@ class Scheduler(
             events.remove(event)
          }
         queues.forEach{
+            println("*************************************")
             it.print()
         }
     }
@@ -47,7 +49,7 @@ class Scheduler(
         val queueArrivalId = event.queueArrival()
         val queueArrival = getQueueById(queueArrivalId)
 
-        if (queueArrival.status() < queueArrival.capacity()) {
+        if (queueArrival.isInfinity() || queueArrival.status() < queueArrival.capacity()) {
             queueArrival.increment()
             if (queueArrival.status() <= queueArrival.servers() && randomNums.isNotEmpty()) {
                createEventByNextQueue(queueArrival)
@@ -100,15 +102,27 @@ class Scheduler(
            createEventByNextQueue(queueArrival)
         }
 
-        if (queueExit.status() < queueExit.capacity()) {
+        if (queueExit.isInfinity() || queueExit.status() < queueExit.capacity()) {
             queueExit.increment()
             if (queueExit.status() <= queueExit.servers() && randomNums.isNotEmpty()) {
-                createEvent(
-                    "exitSystem",
-                    TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
-                    queueExit.queueId(),
-                    queueExit.queueId()
-                )
+                val random = seed.nextFloat()
+                val nextQueue = queueExit.nextQueue(random)
+                nextQueue?.let {
+                    createEvent(
+                        type = "passage",
+                        TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
+                        queueArrival = queueExit.queueId(),
+                        nextQueue
+                    )
+                } ?: run {
+                    // Não sei lidar com essa saída ainda, qual id devemos enviar por aqui ???
+                    createEvent(
+                        "exitSystem",
+                        TG + queueExit.calcuateServiceTime(randomNums.removeAt(0)),
+                        queueExit.queueId(),
+                        queueExit.queueId()
+                    )
+                }
             }
         } else {
             queueExit.loss()
@@ -134,7 +148,6 @@ class Scheduler(
                 queueOrigin.queueId()
             )
         }
-
     }
 
     private fun accumulateTime(event: Event) {
