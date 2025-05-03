@@ -8,16 +8,16 @@ class QueueImp(
     val capacity: Int = 0, // k
     val arrivalTimes: Pair<Float, Float> = 0f to 0f,
     val serviceTimes: Pair<Float, Float> = 0f to 0f,
-    val queues: MutableMap<Float, String> = mutableMapOf() // Inicializado como MutableMap
+    var queues: MutableMap<Float, String> = mutableMapOf() // Inicializado como MutableMap
 
 ) : Queue {
     private var costumers: Int = 0
     private var lost: Int = 0
     private val times: MutableList<Float> = MutableList(100) { 0f}
-    private var countQ2 : Int = 0
-    private var countQ3 : Int = 0
-    private var count : Int = 0
 
+    init {
+        queues = queues.toSortedMap()
+    }
 
     override fun out() {
         costumers--
@@ -64,18 +64,13 @@ class QueueImp(
 
     override fun nextQueue(prob: Float): String? {
         if (queues.isEmpty()) return null
-        var sum = queues.keys.first()
+        var sum = 0f
         for (it in queues) {
             if (prob < sum) {
-                if (it.value == "Q3") {
-                    countQ3++
-                } else if (it.value == "Q2") {
-                    countQ2++
-                }
-                count++
                 return it.value
             } else {
                 sum += it.key
+                println(sum)
             }
         }
         return null;
