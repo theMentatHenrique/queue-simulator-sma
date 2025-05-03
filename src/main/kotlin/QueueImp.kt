@@ -15,10 +15,6 @@ class QueueImp(
     private var lost: Int = 0
     private val times: MutableList<Float> = MutableList(100) { 0f}
 
-    init {
-        queues = queues.toSortedMap()
-    }
-
     override fun out() {
         costumers--
     }
@@ -56,21 +52,18 @@ class QueueImp(
     }
 
     override fun calcuateArrivalTime(time: Float): Float {
-        if (arrivalTimes.first == 0f && arrivalTimes.second == 0f) {
-            println("zerado bixo")
-        }
         return calcuateOperationTime(time, arrivalTimes)
     }
 
     override fun nextQueue(prob: Float): String? {
+        println(prob)
         if (queues.isEmpty()) return null
-        var sum = 0f
+        var sum = queues.keys.first()
         for (it in queues) {
-            if (prob < sum) {
+            if (prob <= sum) {
                 return it.value
             } else {
                 sum += it.key
-                println(sum)
             }
         }
         return null;
