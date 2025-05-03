@@ -13,7 +13,7 @@ class QueueImp(
 ) : Queue {
     private var costumers: Int = 0
     private var lost: Int = 0
-    private val times: MutableList<Float> = MutableList(capacity + 1) { 0f}
+    private val times: MutableList<Float> = MutableList(100) { 0f}
     private var countQ2 : Int = 0
     private var countQ3 : Int = 0
     private var count : Int = 0
@@ -103,10 +103,12 @@ class QueueImp(
         }
         println("Estado da fila |  Tempo(segundos) | Probabilidade")
         times.forEach {
-            val percAux  = (it/total) * 100f
-            println("${iterator}  | ${it}  | ${percAux}%")
-            iterator++
-            percent += percAux
+            if (it != 0f) {
+                val percAux  = (it/total) * 100f
+                println("${iterator}  | ${it}  | ${percAux}%")
+                iterator++
+                percent += percAux
+            }
         }
         println("Total | ${total} | ${percent}%")
         println("Perdido:${lost}")
