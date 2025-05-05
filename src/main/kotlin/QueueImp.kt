@@ -56,7 +56,6 @@ class QueueImp(
     }
 
     override fun nextQueue(prob: Float): String? {
-        println(prob)
         if (queues.isEmpty()) return null
         var sum = queues.keys.first()
         for (it in queues) {
