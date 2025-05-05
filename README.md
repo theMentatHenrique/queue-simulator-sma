@@ -3,7 +3,7 @@
 ## Autores
 
 * [Henrique Feijó Paim](https://github.com/seu-usuario-github](https://github.com/theMentatHenrique))
-* [Loenardo Ruppert](https://github.com/usuario-colaborador-1](https://github.com/yazuc))
+* [Leonardo Ruppert](https://github.com/usuario-colaborador-1](https://github.com/yazuc))
 
 ## Implementação
 
